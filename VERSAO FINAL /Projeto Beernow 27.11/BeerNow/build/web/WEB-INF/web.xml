@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <servlet>
+        <servlet-name>ServletValidaLogin</servlet-name>
+        <servlet-class>Control.ServletValidaLogin</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ServletValidaLogin</servlet-name>
+        <url-pattern>/ServletValidaLogin</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>ServletbuscaCerv</servlet-name>
+        <servlet-class>Control.ServletbuscaCerv</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ServletbuscaCerv</servlet-name>
+        <url-pattern>/ServletbuscaCerv</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>ServletRanUser</servlet-name>
+        <servlet-class>Control.ServletRanUser</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ServletRanUser</servlet-name>
+        <url-pattern>/ServletRanUser</url-pattern>
+    </servlet-mapping>
+    
+        <servlet>
+        <servlet-name>ServletRanEstab</servlet-name>
+        <servlet-class>Control.ServletRanEstab</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ServletRanEstab</servlet-name>
+        <url-pattern>/ServletRanEstab</url-pattern>
+    </servlet-mapping>
+    
+            <servlet>
+        <servlet-name>ServletCadastroBar</servlet-name>
+        <servlet-class>Control.ServletCadastroBar</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ServletCadastroBar</servlet-name>
+        <url-pattern>/ServletCadastroBar</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>ServletCadCli</servlet-name>
+        <servlet-class>Control.ServletCadCli</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ServletCadCli</servlet-name>
+        <url-pattern>/ServletCadCli</url-pattern>
+    </servlet-mapping>
+    
+
+</web-app>

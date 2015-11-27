@@ -1,0 +1,854 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema beernow
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema beernow
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `beernow` DEFAULT CHARACTER SET utf8 ;
+USE `beernow` ;
+
+-- -----------------------------------------------------
+-- Table `beernow`.`cliente`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beernow`.`cliente` (
+  `Id_cliente` INT(11) NOT NULL AUTO_INCREMENT,
+  `Username` VARCHAR(45) NOT NULL,
+  `Password` VARCHAR(20) NOT NULL,
+  `Nome` VARCHAR(30) NOT NULL,
+  `Sobrenome` VARCHAR(60) NOT NULL,
+  `Cpf` VARCHAR(11) NOT NULL,
+  `Endereco` VARCHAR(60) NOT NULL,
+  `Celular` VARCHAR(11) NULL DEFAULT NULL,
+  `Data_nasc` DATETIME NOT NULL,
+  `Ranking_user` INT(10) NOT NULL,
+  `Habilitado` INT(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`Id_cliente`),
+  UNIQUE INDEX `ID_cliente_UNIQUE` (`Id_cliente` ASC),
+  UNIQUE INDEX `Username_UNIQUE` (`Username` ASC),
+  UNIQUE INDEX `CPF_UNIQUE` (`Cpf` ASC))
+ENGINE = InnoDB
+AUTO_INCREMENT = 7
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `beernow`.`cerveja`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beernow`.`cerveja` (
+  `Id_cerveja` INT(11) NOT NULL AUTO_INCREMENT,
+  `Nome` VARCHAR(45) NOT NULL,
+  `Tipo` VARCHAR(45) NULL DEFAULT NULL,
+  `Descricao` VARCHAR(350) NULL DEFAULT NULL,
+  PRIMARY KEY (`Id_cerveja`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 7
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `beernow`.`estabelecimento`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beernow`.`estabelecimento` (
+  `Id_estabelecimento` INT(11) NOT NULL AUTO_INCREMENT,
+  `Nome` VARCHAR(45) NOT NULL,
+  `Endereco` VARCHAR(60) NOT NULL,
+  `Tipo` VARCHAR(45) NOT NULL,
+  `Descricao` VARCHAR(350) NULL DEFAULT NULL,
+  `Ranking_estab` INT(11) NOT NULL,
+  `Cervejas` VARCHAR(60) NOT NULL,
+  `Habilitado` INT(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`Id_estabelecimento`),
+  UNIQUE INDEX `Nome_UNIQUE` (`Nome` ASC),
+  INDEX `fk_Estabelecimento_Cerveja_idx` (`Cervejas` ASC))
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `beernow`.`preco_cerveja`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beernow`.`preco_cerveja` (
+  `Id_preco_cerveja` INT(11) NOT NULL,
+  `Preco` FLOAT NOT NULL,
+  `Cerveja_Id_cerveja` INT(11) NOT NULL,
+  `Estabelecimento_Id_estabelecimento` INT(11) NOT NULL,
+  PRIMARY KEY (`Id_preco_cerveja`),
+  INDEX `fk_Preco_cerveja_Cerveja1_idx` (`Cerveja_Id_cerveja` ASC),
+  INDEX `fk_Preco_cerveja_Estabelecimento1_idx` (`Estabelecimento_Id_estabelecimento` ASC),
+  CONSTRAINT `fk_Preco_cerveja_Cerveja1`
+    FOREIGN KEY (`Cerveja_Id_cerveja`)
+    REFERENCES `beernow`.`cerveja` (`Id_cerveja`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Preco_cerveja_Estabelecimento1`
+    FOREIGN KEY (`Estabelecimento_Id_estabelecimento`)
+    REFERENCES `beernow`.`estabelecimento` (`Id_estabelecimento`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `beernow`.`altera_preco`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beernow`.`altera_preco` (
+  `Id_altera_preco` INT(11) NOT NULL AUTO_INCREMENT,
+  `Cliente_Id_cliente` INT(11) NOT NULL,
+  `Preco_cerveja_Id_preco_cerveja` INT(11) NOT NULL,
+  `Novo_preco` FLOAT NOT NULL,
+  `Votacao` INT(11) NOT NULL,
+  PRIMARY KEY (`Id_altera_preco`, `Cliente_Id_cliente`, `Preco_cerveja_Id_preco_cerveja`),
+  INDEX `fk_Altera_preco_Cliente1_idx` (`Cliente_Id_cliente` ASC),
+  INDEX `fk_Altera_preco_Preco_cerveja1_idx` (`Preco_cerveja_Id_preco_cerveja` ASC),
+  CONSTRAINT `fk_Altera_preco_Cliente1`
+    FOREIGN KEY (`Cliente_Id_cliente`)
+    REFERENCES `beernow`.`cliente` (`Id_cliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Altera_preco_Preco_cerveja1`
+    FOREIGN KEY (`Preco_cerveja_Id_preco_cerveja`)
+    REFERENCES `beernow`.`preco_cerveja` (`Id_preco_cerveja`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `beernow`.`cerveja_info`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beernow`.`cerveja_info` (
+  `Nome` INT(11) NULL DEFAULT NULL,
+  `Tipo` INT(11) NULL DEFAULT NULL,
+  `Descricao` INT(11) NULL DEFAULT NULL,
+  `Preco` INT(11) NULL DEFAULT NULL,
+  `Endereco` INT(11) NULL DEFAULT NULL,
+  `Ranking_estab` INT(11) NULL DEFAULT NULL)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `beernow`.`promocao`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beernow`.`promocao` (
+  `Id_promocao` INT(11) NOT NULL,
+  `Descricao` VARCHAR(350) NULL DEFAULT NULL,
+  `Preco_promo` FLOAT NOT NULL,
+  `Votacao_promo` INT(11) NOT NULL,
+  `Preco_cerveja_Id_preco_cerveja` INT(11) NOT NULL,
+  PRIMARY KEY (`Id_promocao`),
+  INDEX `fk_Promocao_Preco_cerveja1_idx` (`Preco_cerveja_Id_preco_cerveja` ASC),
+  CONSTRAINT `fk_Promocao_Preco_cerveja1`
+    FOREIGN KEY (`Preco_cerveja_Id_preco_cerveja`)
+    REFERENCES `beernow`.`preco_cerveja` (`Id_preco_cerveja`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `beernow`.`confirma_promo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beernow`.`confirma_promo` (
+  `Id_confirma_promo` INT(11) NOT NULL,
+  `Voto_promo` TINYINT(1) NOT NULL,
+  `Promocao_Id_promocao` INT(11) NOT NULL,
+  `Cliente_Id_cliente` INT(11) NOT NULL,
+  PRIMARY KEY (`Id_confirma_promo`),
+  INDEX `fk_Confirma_promo_Promocao1_idx` (`Promocao_Id_promocao` ASC),
+  INDEX `fk_Confirma_promo_Cliente1_idx` (`Cliente_Id_cliente` ASC),
+  CONSTRAINT `fk_Confirma_promo_Cliente1`
+    FOREIGN KEY (`Cliente_Id_cliente`)
+    REFERENCES `beernow`.`cliente` (`Id_cliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Confirma_promo_Promocao1`
+    FOREIGN KEY (`Promocao_Id_promocao`)
+    REFERENCES `beernow`.`promocao` (`Id_promocao`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `beernow`.`pontuacao`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beernow`.`pontuacao` (
+  `Id_pontuacao` INT(11) NOT NULL AUTO_INCREMENT,
+  `Data_voto` DATETIME NOT NULL,
+  `Pontuacao` INT(1) NOT NULL COMMENT 'De 0 - 5',
+  `Cliente_Id_cliente` INT(11) NOT NULL,
+  `Estabelecimento_Id_estabelecimento` INT(11) NOT NULL,
+  `Votos_brutos` INT(11) NULL DEFAULT NULL,
+  `Qtdd_votos` INT(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`Id_pontuacao`),
+  INDEX `fk_Pontuacao_Cliente1_idx` (`Cliente_Id_cliente` ASC),
+  INDEX `fk_Pontuacao_Estabelecimento1_idx` (`Estabelecimento_Id_estabelecimento` ASC),
+  CONSTRAINT `fk_Pontuacao_Cliente1`
+    FOREIGN KEY (`Cliente_Id_cliente`)
+    REFERENCES `beernow`.`cliente` (`Id_cliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Pontuacao_Estabelecimento1`
+    FOREIGN KEY (`Estabelecimento_Id_estabelecimento`)
+    REFERENCES `beernow`.`estabelecimento` (`Id_estabelecimento`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `beernow`.`top10_estabelecimento`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beernow`.`top10_estabelecimento` (
+  `Nome` INT(11) NULL DEFAULT NULL,
+  `Ranking_estab` INT(11) NULL DEFAULT NULL)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `beernow`.`top10_usuario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beernow`.`top10_usuario` (
+  `Username` INT(11) NULL DEFAULT NULL,
+  `Ranking_user` INT(11) NULL DEFAULT NULL)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `beernow`.`votos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `beernow`.`votos` (
+  `Id_votos` INT(11) NOT NULL,
+  `Voto` TINYINT(1) NOT NULL,
+  `Altera_preco_Id_altera_preco` INT(11) NOT NULL,
+  `Altera_preco_Cliente_Id_cliente` INT(11) NOT NULL,
+  `Altera_preco_Preco_cerveja_Id_preco_cerveja` INT(11) NOT NULL,
+  PRIMARY KEY (`Id_votos`),
+  INDEX `fk_Votos_Altera_preco1_idx` (`Altera_preco_Id_altera_preco` ASC, `Altera_preco_Cliente_Id_cliente` ASC, `Altera_preco_Preco_cerveja_Id_preco_cerveja` ASC),
+  CONSTRAINT `fk_Votos_Altera_preco1`
+    FOREIGN KEY (`Altera_preco_Id_altera_preco` , `Altera_preco_Cliente_Id_cliente` , `Altera_preco_Preco_cerveja_Id_preco_cerveja`)
+    REFERENCES `beernow`.`altera_preco` (`Id_altera_preco` , `Cliente_Id_cliente` , `Preco_cerveja_Id_preco_cerveja`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+USE `beernow` ;
+
+-- -----------------------------------------------------
+-- procedure Altera_cerveja
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Altera_cerveja`(IN Id_cerveja INT, 
+ IN Nome VARCHAR(45),    
+ IN Tipo VARCHAR(45),
+ IN Descricao VARCHAR(350)
+ )
+BEGIN 
+
+UPDATE Cerveja
+SET
+Id_cerveja = Id_cerveja,
+Nome = Nome,
+Tipo = Tipo,
+Descricao = Descricao
+WHERE Id_cerveja = Id_cerveja;
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Altera_cliente
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Altera_cliente`(IN Id_cliente INT, 
+ IN Username VARCHAR(45),    
+ IN Password VARCHAR(20),
+ IN Nome VARCHAR(60),
+ IN Sobrenome VARCHAR(60),
+ IN Cpf VARCHAR(11),
+ IN Endereco VARCHAR(60),
+ IN Celular VARCHAR(11),
+ IN Data_nasc DATETIME,
+ IN Ranking_user INT(10)
+ )
+BEGIN 
+
+    UPDATE Cliente
+    SET    
+Id_cliente = Id_cliente,
+Username = Username,
+Password = Password,
+Nome = Nome,
+Sobrenome = Sobrenome,
+Cpf = Cpf,
+Endereco = Endereco,
+Celular = Celular,
+Data_nasc = Data_nasc,
+Ranking_user = Ranking_user
+WHERE Id_cliente = Id_cliente;
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Altera_estabelecimento
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Altera_estabelecimento`(IN Id_estabelecimento INT, 
+ IN Nome VARCHAR(45),    
+ IN Endereco VARCHAR(60),
+ IN Tipo VARCHAR(45),
+ IN Descricao VARCHAR(350),
+ IN Ranking_estab FLOAT,
+ IN Cervejas VARCHAR(60)
+ )
+BEGIN 
+
+UPDATE Estabelecimento
+SET
+Id_estabelecimento = Id_estabelecimento,
+Nome = Nome,
+Endereco = Endereco,
+Tipo = Tipo,
+Descricao = Descricao,
+Ranking_estab = Ranking_estab,
+Cervejas = Cervejas
+WHERE Id_estabelecimento = Id_estabelecimento;
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Atualiza_ranking
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Atualiza_ranking`()
+BEGIN declare contador int(1); 
+SELECT Inserted.Pontuacao into contador 
+FROM Pontuacao 
+WHERE Id_estabelecimento = Id_estabelecimento; 
+UPDATE Estabelecimento 
+SET Qtdd_votos = (Qtdd_votos+1), Votos_brutos = (Votos_brutos + contador)
+WHERE Id_estabelecimento = Id_estabelecimento; 
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Busca_Cliente
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Busca_Cliente`(IN idbusca INT)
+BEGIN
+select Id_cliente, Username, Password, Nome, Sobrenome, Cpf, Endereco, Celular, Data_nasc, Ranking_user 
+       from  Cliente
+		Where c.Nome = idbusca; 
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Busca_Confirma_promo
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Busca_Confirma_promo`(IN idbusca int)
+BEGIN
+select Id_confirma_promo, Voto_promo, Promocao_Id_promocao, Cliente_Id_cliente
+       from  Confirma_promo
+		Where Id_confirma_promo = idbusca; 
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Busca_Pontuacao
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Busca_Pontuacao`(IN idbusca int)
+BEGIN
+select Id_pontuacao, Data_voto, Pontuacao, Cliente_Id_cliente, Estabelecimento_Id_estabelecimento, Votos_brutos, Qtdd_votos
+       from  Pontuacao
+		Where Id_pontuacao = idbusca; 
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Busca_Preco_cerveja
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Busca_Preco_cerveja`(IN idbusca int)
+BEGIN
+select Id_preco_cerveja, Preco, Cerveja_Id_cerveja, Estabelecimento_Id_estabelecimento 
+       from  Preco_cerveja
+		Where Id_preco_cerveja = idbusca; 
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Busca_Promocao
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Busca_Promocao`(IN idbusca int)
+BEGIN
+select Id_promocao, Descricao, Preco_promo, Votacao_promo, Preco_cerveja_Id_preco_cerveja
+       from  Promocao
+		Where Id_pomocao = idbusca; 
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Busca_Votos
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Busca_Votos`(IN idbusca int)
+BEGIN
+select Id_votos, Voto, Altera_preco_Id_altera_preco, Altera_preco_Cliente_Id_cliente, Altera_preco_Preco_cerveja_Id_preco_cerveja 
+       from  Votos
+		Where Id_votos = idbusca; 
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Busca_cerveja
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Busca_cerveja`(IN nomebusca varchar(45))
+BEGIN
+select c.Nome, c.Tipo, e.Nome, pc.Preco 
+       from  Cerveja c
+            INNER JOIN
+        Preco_cerveja pc ON c.Id_cerveja = pc.Cerveja_Id_cerveja
+            INNER JOIN
+        Estabelecimento e ON pc.Estabelecimento_Id_estabelecimento = e.Id_estabelecimento
+		    Where c.Nome like nomebusca 
+            Order by pc.Preco
+            Limit 20;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Busca_estabelecimento
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Busca_estabelecimento`(IN nomebusca varchar(45))
+BEGIN
+select e.Nome, e.Ranking_estab, e.Cervejas, pc.Preco 
+       from  Cerveja c
+            INNER JOIN
+        Preco_cerveja pc ON c.Id_cerveja = pc.Cerveja_Id_cerveja
+            INNER JOIN
+        Estabelecimento e ON pc.Estabelecimento_Id_estabelecimento = e.Id_estabelecimento
+		    Where e.Nome like nomebusca; 
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Insere_Altera_preco
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Insere_Altera_preco`(
+       IN p_Novo_preco                       FLOAT      , 
+       IN p_Votacao                     INT          
+ )
+BEGIN 
+     INSERT INTO Altera_preco
+          ( 
+            Novo_preco					 ,
+            Votacao                  
+          ) 
+     VALUES 
+          ( 
+            p_Novo_preco			  		  ,
+            p_Votacao 
+          ) ;
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Insere_Cerveja
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Insere_Cerveja`(
+       IN p_Nome                       VARCHAR(45)      , 
+       IN p_Tipo                       VARCHAR(45)      , 
+       IN p_Descricao                  VARCHAR(350)       
+)
+BEGIN 
+     INSERT INTO Cerveja
+          ( 
+            Nome					 ,
+            Tipo                     ,
+            Descricao                   
+          ) 
+     VALUES 
+          ( 
+            p_Nome			  		  ,
+            p_Tipo                     ,
+            p_Descricao          
+		   ) ;
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Insere_Cliente
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Insere_Cliente`(
+       IN p_Username                       VARCHAR(45)      , 
+       IN p_Password                       VARCHAR(20)      , 
+       IN p_Nome                           VARCHAR(30)      , 
+       IN p_Sobrenome                      VARCHAR(60)      , 
+       IN p_Cpf                            VARCHAR(11)      , 
+       IN p_Endereco                       VARCHAR(60)      ,
+       IN p_Celular                        VARCHAR(11)      ,
+       IN p_Data_nasc					   DATETIME			,
+       IN p_Ranking_user                   INT(10)          
+ )
+BEGIN 
+     INSERT INTO Cliente
+          ( 
+            Username					 ,
+            Password                     ,
+            Nome                         ,
+            Sobrenome                    ,
+            Cpf                          ,
+            Endereco                     ,
+            Celular                      ,
+            Data_nasc                    ,
+            Ranking_user                  
+          ) 
+     VALUES 
+          ( 
+            p_Username			  		  ,
+            p_Password                     ,
+            p_Nome                         ,
+            p_Sobrenome                    ,
+            p_Cpf                          ,
+            p_Endereco                     ,
+            p_Celular                      ,
+            p_Data_nasc                    ,
+            p_Ranking_user
+          ) ;
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Insere_Confirma_promo
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Insere_Confirma_promo`(
+       IN p_Voto_promo                       BOOLEAN         
+ )
+BEGIN 
+     INSERT INTO Confirma_promo
+          ( 
+            Voto_promo                 
+          ) 
+     VALUES 
+          ( 
+            p_Voto_promo
+          ) ;
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Insere_Estabelecimento
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Insere_Estabelecimento`(
+       IN p_Nome                       VARCHAR(45)      , 
+       IN p_Endereco                      VARCHAR(60)      , 
+       
+       IN p_Tipo                      VARCHAR(45)      , 
+       IN p_Descricao                            VARCHAR(350)      , 
+       IN p_Ranking_estab                       FLOAT      ,
+       IN p_Cervejas	VARCHAR(60)
+         
+ )
+BEGIN 
+     INSERT INTO Estabelecimento
+          ( 
+            Nome                         ,
+            Endereco                    ,
+       
+            Tipo                     ,
+            Descricao         ,
+            Ranking_estab,
+            Cervejas
+          ) 
+     VALUES 
+          ( 
+            p_Nome						,
+            p_Endereco                     ,
+       
+            p_Tipo                          ,
+            p_Descricao                      ,
+            p_Ranking_estab        ,
+            p_Cervejas
+            ) ;
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Insere_Pontuacao
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Insere_Pontuacao`(
+       IN p_Data_voto                       DATETIME      , 
+       IN p_Pontuacao                       INT(1)              
+ )
+BEGIN 
+     INSERT INTO Pontuacao
+          ( 
+            Data_voto					 ,
+            Pontuacao                 
+          ) 
+     VALUES 
+          ( 
+            p_Data_voto			  		  ,
+            p_Pontuacao
+          ) ;
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Insere_Preco_cerveja
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Insere_Preco_cerveja`(
+       IN p_Preco                      FLOAT          
+       )
+BEGIN 
+     INSERT INTO Preco_cerveja
+          ( 
+            Preco                  
+          ) 
+     VALUES 
+          ( 
+            p_Preco
+          ) ;
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Insere_Promocao
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Insere_Promocao`(
+       IN p_Descricao                      VARCHAR(350)      , 
+       IN p_Preco_promo                       FLOAT      , 
+       IN p_Votacao_promo                           INT     
+ )
+BEGIN 
+     INSERT INTO Promocao
+          ( 
+            Descricao					 ,
+            Preco_promo                     ,
+            Votacao_promo                 
+          ) 
+     VALUES 
+          ( 
+            p_Descricao			  		  ,
+            p_Preco_promo                     ,
+            p_Votacao_promo
+          ) ;
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Insere_Votos
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Insere_Votos`(
+       IN p_Voto                       BOOLEAN            
+ )
+BEGIN 
+     INSERT INTO Votos
+          ( 
+            Voto                  
+          ) 
+     VALUES 
+          ( 
+            p_Voto
+          ) ;
+
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Ranking_estabelecimento
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Ranking_estabelecimento`(IN nomebusca varchar(45))
+BEGIN
+select Nome, Ranking_estab
+       from  Estabelecimento
+		Where Nome like nomebusca; 
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Ranking_usuario
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Ranking_usuario`(IN nomebusca varchar(45))
+BEGIN
+select Username, Ranking_user
+       from  Cliente
+		Where Username like nomebusca; 
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Top10_estabelecimento
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Top10_estabelecimento`()
+BEGIN
+    SELECT 
+        Nome, Ranking_estab
+    FROM
+        Estabelecimento
+    WHERE
+        Ranking_estab IS NOT NULL
+    ORDER BY Ranking_estab DESC
+    LIMIT 10;
+END$$
+
+DELIMITER ;
+
+-- -----------------------------------------------------
+-- procedure Top10_usuario
+-- -----------------------------------------------------
+
+DELIMITER $$
+USE `beernow`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Top10_usuario`()
+BEGIN
+     SELECT 
+        Username, Ranking_user
+    FROM
+        Cliente
+    WHERE
+        Ranking_user IS NOT NULL
+    ORDER BY Ranking_user DESC
+    LIMIT 10;
+END$$
+
+DELIMITER ;
+USE `beernow`;
+
+DELIMITER $$
+USE `beernow`$$
+CREATE
+DEFINER=`root`@`localhost`
+TRIGGER `beernow`.`TRG_Atualiza_ranking`
+AFTER INSERT ON `beernow`.`pontuacao`
+FOR EACH ROW
+BEGIN 
+call Atualiza_ranking();
+END$$
+
+
+DELIMITER ;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

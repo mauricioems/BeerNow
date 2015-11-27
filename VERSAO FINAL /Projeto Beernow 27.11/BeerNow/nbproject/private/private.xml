@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/src/java/Model/Estabelecimento.java</file>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/web/CadastroBar.html</file>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/src/java/Control/ServletValidaLogin.java</file>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/src/java/Model/DaoCliente.java</file>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/src/java/Control/ServletCadastroBar.java</file>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/web/login.jsp</file>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/src/java/Model/DaoEstabelecimento.java</file>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/web/teste.html</file>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/web/Confirma.jsp</file>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/web/RankingEstabelecimentos.html</file>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/src/java/Control/ServletRanEstab.java</file>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/src/java/Model/DaoOutros.java</file>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/src/java/Model/Cerveja.java</file>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/src/java/Control/ServletRanUser.java</file>
+            <file>file:/C:/Users/win7/Desktop/JavaEE7Webinar/web/Principal.html</file>
+        </group>
+    </open-files>
+</project-private>
